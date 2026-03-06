@@ -1,0 +1,9 @@
+python-docx
+pandas
+python-dotenv
+openai
+python-telegram-bot
+reportlab
+Pillow
+python-pptx
+openpyxl

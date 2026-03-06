@@ -1,0 +1,20 @@
+{
+  "body_materials": {
+    "egger": 24000,
+    "lamarty": 11000
+  },
+  "facade_materials": {
+    "egger": 6500,
+    "enamel": 17000,
+    "veneer": 30000
+  },
+  "surcharges": {
+    "two_sided": 12000,
+    "milling": 8000
+  },
+  "fittings": {
+    "blum_hinge": 1100,
+    "tip_on": 1100,
+    "legrabox": 24000
+  }
+}
