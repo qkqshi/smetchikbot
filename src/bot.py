@@ -48,6 +48,29 @@ def clean_number(text):
         return int(numbers[0])
     return 0
 
+async def send_long_message(update: Update, text: str, max_length: int = 4000):
+    """Отправляет длинное сообщение, разбивая его на части если нужно"""
+    if len(text) <= max_length:
+        await update.message.reply_text(text)
+        return
+    
+    # Разбиваем по строкам
+    lines = text.split('\n')
+    current_message = ""
+    
+    for line in lines:
+        # Если добавление строки превысит лимит, отправляем текущее сообщение
+        if len(current_message) + len(line) + 1 > max_length:
+            if current_message:
+                await update.message.reply_text(current_message)
+                current_message = ""
+        
+        current_message += line + "\n"
+    
+    # Отправляем остаток
+    if current_message:
+        await update.message.reply_text(current_message)
+
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Обработчик команды /start"""
     await update.message.reply_text(
@@ -293,7 +316,7 @@ async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
             response += "=" * 40 + "\n"
             response += f"💵 ИТОГО ПО ПРОЕКТУ: {(total_sum + furniture_total):,} руб.".replace(',', ' ')
         
-        await update.message.reply_text(response)
+        await send_long_message(update, response)
         
         # Обновляем сохраненные данные - возвращаем к базовым
         base_project_name = calc_data.get('base_project_name', calc_data['project_name'])
@@ -465,7 +488,7 @@ async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
         response += "=" * 40 + "\n"
         response += f"💵 ИТОГО ПО ПРОЕКТУ: {(total_sum + furniture_total):,} руб.".replace(',', ' ')
     
-    await update.message.reply_text(response)
+    await send_long_message(update, response)
     
     # Обновляем сохраненные данные с учетом наценки
     updated_items = []
@@ -653,12 +676,12 @@ async def handle_document(update: Update, context: ContextTypes.DEFAULT_TYPE):
         response += f"💰 ОБЩАЯ СУММА МАТЕРИАЛОВ: {total_sum:,.0f} руб.\n\n"
         
         # Добавляем информацию о мебели
+        furniture_total = 0
         if furniture_items:
             response += "=" * 40 + "\n"
             response += "🪑 МЕБЕЛЬ\n"
             response += "=" * 40 + "\n\n"
             
-            furniture_total = 0
             for furn in furniture_items:
                 response += f"🔹 {furn['name']}\n"
                 response += f"   Количество: {furn['quantity']} шт.\n"
@@ -677,8 +700,8 @@ async def handle_document(update: Update, context: ContextTypes.DEFAULT_TYPE):
             response += "=" * 40 + "\n"
             response += f"💵 ИТОГО ПО ПРОЕКТУ: {(total_sum + furniture_total):,} руб.".replace(',', ' ')
         
-        # Отправляем текстовый ответ
-        await update.message.reply_text(response)
+        # Отправляем текстовый ответ, разбивая на части если нужно
+        await send_long_message(update, response)
         
         # Генерируем PPTX
         project_name = document.file_name.replace('.docx', '')
