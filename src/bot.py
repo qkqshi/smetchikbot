@@ -161,7 +161,8 @@ async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 )
         except Exception as e:
             logger.error(f"Ошибка генерации PDF: {e}", exc_info=True)
-            await update.message.reply_text(f"⚠️ Не удалось создать PDF файл: {str(e)}")
+            error_msg = f"⚠️ Не удалось создать PDF файл: {str(e)}"
+            await send_long_message(update, error_msg)
         return
     
     # Проверка на запрос Excel
@@ -195,7 +196,8 @@ async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 )
         except Exception as e:
             logger.error(f"Ошибка генерации Excel: {e}", exc_info=True)
-            await update.message.reply_text(f"⚠️ Не удалось создать Excel файл: {str(e)}")
+            error_msg = f"⚠️ Не удалось создать Excel файл: {str(e)}"
+            await send_long_message(update, error_msg)
         return
     
     # Проверка на запрос презентации PPTX
@@ -239,7 +241,8 @@ async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 )
         except Exception as e:
             logger.error(f"Ошибка генерации PPTX: {e}", exc_info=True)
-            await update.message.reply_text(f"⚠️ Не удалось создать презентацию: {str(e)}")
+            error_msg = f"⚠️ Не удалось создать презентацию: {str(e)}"
+            await send_long_message(update, error_msg)
         return
     
     # Проверка на команду "сбросить"
@@ -346,7 +349,8 @@ async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 )
         except Exception as e:
             logger.error(f"Ошибка генерации PPTX: {e}", exc_info=True)
-            await update.message.reply_text(f"⚠️ Не удалось создать PPTX файл: {str(e)}")
+            error_msg = f"⚠️ Не удалось создать PPTX файл: {str(e)}"
+            await send_long_message(update, error_msg)
         
         return
     
@@ -537,7 +541,8 @@ async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
             )
     except Exception as e:
         logger.error(f"Ошибка генерации PPTX: {e}", exc_info=True)
-        await update.message.reply_text(f"⚠️ Не удалось создать PPTX файл: {str(e)}")
+        error_msg = f"⚠️ Не удалось создать PPTX файл: {str(e)}"
+        await send_long_message(update, error_msg)
 
 async def handle_document(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Обработчик документов"""
@@ -744,11 +749,13 @@ async def handle_document(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 
         except Exception as e:
             logger.error(f"Ошибка генерации PPTX: {e}", exc_info=True)
-            await update.message.reply_text(f"⚠️ Не удалось создать PPTX файл: {str(e)}")
+            error_msg = f"⚠️ Не удалось создать PPTX файл: {str(e)}"
+            await send_long_message(update, error_msg)
         
     except Exception as e:
         logger.error(f"Ошибка обработки файла: {e}")
-        await update.message.reply_text(f"❌ Ошибка при обработке файла: {str(e)}")
+        error_message = f"❌ Ошибка при обработке файла: {str(e)}"
+        await send_long_message(update, error_message)
 
 def main():
     """Запуск бота"""
